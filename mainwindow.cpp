@@ -41,7 +41,7 @@ void MainWindow::onStartClicked() {
     ImageWriter writer;
     writer.setOutputFile(out);
 
-    std::ifstream file(in);
+    std::ifstream file(in, std::ifstream::binary);
     writer.start();
     char data[512];
     do {
