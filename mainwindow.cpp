@@ -8,7 +8,6 @@ MainWindow::MainWindow(BaseObjectType *                  cobject,
   builder->get_widget("fileLoadButton", openButton);
   builder->get_widget("setPathButton", setPathButton);
   builder->get_widget("startButton", startButton);
-  builder->get_widget("progressWindow", progressWindow);
   builder->get_widget("savePathEntry", savePathEntry);
 
   startButton->signal_clicked().connect(

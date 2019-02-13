@@ -23,6 +23,5 @@ private:
   Gtk::FileChooserButton *openButton;
   Gtk::RadioButton *      mashRadio, *recoverRadio;
   Gtk::Button *           startButton, *setPathButton;
-  Gtk::Window *           progressWindow;
   Gtk::Entry *            savePathEntry;
 };
