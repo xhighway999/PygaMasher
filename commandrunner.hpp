@@ -1,11 +1,14 @@
 #pragma once
 
-#include <fcntl.h>
+#include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
-#include <unistd.h>
 
+#ifndef __MINGW32__
+#  include <fcntl.h>
+#  include <unistd.h>
+#endif
 class CommandRunner {
 public:
   void        runCommand(const std::string &str);

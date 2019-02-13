@@ -2,11 +2,19 @@
 
 ImageReader::ImageReader() {}
 void ImageReader::start() {
-  std::filesystem::remove_all(cachePath);
-  std::filesystem::create_directory(cachePath);
-  std::string command = "ffmpeg -y -i " + inputVideo
-                        + " -vf \"select=not(mod(n\\,30))\" -vsync vfr -q:v 2 "
-                        + cachePath + "/img_%05d.png";
+  try {
+    if(std::filesystem::exists(cachePath))
+      std::filesystem::remove_all(cachePath);
+    std::filesystem::create_directory(cachePath);
+  } catch(const std::exception &e) {
+    std::cout << e.what() << "\n";
+  }
+
+  std::filesystem::path fullPath = cachePath / "img_%05d.png";
+
+  std::string command = ffmpegName + " -y -i \"" + inputVideo.string()
+                        + "\" -vf \"fps=1\" -q:v 2 \"" + fullPath.string()
+                        + "\"";
   CommandRunner runner;
   runner.runCommand(command);
   while(runner.readable()) {
@@ -16,7 +24,7 @@ void ImageReader::start() {
 
   outFile.open(outputPath, std::ios::binary | std::ios::out);
 
-  std::vector<std::string> paths;
+  std::vector<std::filesystem::path> paths;
   for(const auto &p : std::filesystem::directory_iterator(cachePath)) {
     if(p.path().extension() == ".png") {
       paths.push_back(p.path());
@@ -32,9 +40,9 @@ void ImageReader::start() {
   outFile.close();
 }
 
-void ImageReader::readImage(const std::string &path) {
+void ImageReader::readImage(const std::filesystem::path &path) {
   int            w, h, n;
-  unsigned char *data = stbi_load(path.c_str(), &w, &h, &n, 1);
+  unsigned char *data = stbi_load(path.string().c_str(), &w, &h, &n, 1);
 
   auto getPixel = [&data, w](size_t x, size_t y) {
     size_t        i = y * w + x;
@@ -64,6 +72,9 @@ void ImageReader::readImage(const std::string &path) {
   free(data);
 }
 
-void ImageReader::setInputFile(const std::string &path) { inputVideo = path; }
-void ImageReader::setOutputFile(const std::string &path) { outputPath = path; }
-
+void ImageReader::setInputFile(const std::filesystem::path &path) {
+  inputVideo = path;
+}
+void ImageReader::setOutputFile(const std::filesystem::path &path) {
+  outputPath = path;
+}

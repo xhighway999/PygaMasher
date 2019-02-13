@@ -1,5 +1,5 @@
 project("PygaMasher")
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.12)
 set (CMAKE_CXX_STANDARD 17)
 
 set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} -Wall)
@@ -11,7 +11,9 @@ find_package(PkgConfig)
 
 pkg_check_modules(GTKMM gtkmm-3.0)
 
-add_executable(PygaMasher main.cpp mainwindow.cpp imagewriter.cpp imagereader.cpp  commandrunner.cpp)
+add_executable(PygaMasher main.cpp mainwindow.cpp imagewriter.cpp imagereader.cpp commandrunner.cpp)
+
+
 target_link_libraries(PygaMasher stdc++fs pthread)
 
 link_directories(${GTKMM_LIBRARY_DIRS})

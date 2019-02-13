@@ -5,8 +5,14 @@ void ImageWriter::start() {
 
   currentByte  = 0;
   currentImage = 0;
-  std::filesystem::remove_all(wd);
-  std::filesystem::create_directory(wd);
+  try {
+    if(std::filesystem::exists(wd))
+      std::filesystem::remove_all(wd);
+    std::filesystem::create_directory(wd);
+  } catch(const std::exception &e) {
+    std::cout << e.what() << "\n";
+    exit(1);
+  }
 }
 void ImageWriter::writeData(char *data, size_t size) {
   size_t dataRemaining = size;
@@ -70,18 +76,20 @@ void ImageWriter::flushImage() {
   sprintf(t, "%05zu", currentImage++);
   std::string number = t;
 
-  std::string fileName = wd + "/" + number + ".png";
-  stbi_write_png(fileName.c_str(), width, height, 1, &image[0], width);
+  std::string           fileName = number + ".png";
+  std::filesystem::path filePath = wd / fileName;
+  stbi_write_png(filePath.string().c_str(), width, height, 1, &image[0], width);
   currentImageData.resize(0);
 }
 
 void ImageWriter::end() {
   // TODO: Mark data ending with something or have a header
   flushImage();
-  std::string command = "ffmpeg -y -framerate 1 -pattern_type glob -i '" + wd
-                        + "/*.png' -c:v libx264 -x264-params "
-                          "keyint=30:scenecut=0 -r 30 -pix_fmt rgb24 '"
-                        + fileOutputPath + "' &> log.txt ";
+  std::filesystem::path fullWdPath = wd / "%05d.png";
+
+  std::string command = ffmpegName + " -y -framerate 1 -i \""
+                        + fullWdPath.string() + "\" -c:v libx264 \""
+                        + fileOutputPath.string() + "\"";
   cmdRunner.runCommand(command);
 
   std::string log;
@@ -97,4 +105,3 @@ void ImageWriter::end() {
 void ImageWriter::setOutputFile(const std::string &path) {
   fileOutputPath = path;
 }
-

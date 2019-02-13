@@ -1,6 +1,7 @@
 #pragma once
 
 #include "commandrunner.hpp"
+#include "ffmpeg.hpp"
 #include "stb/stb_image_write.h"
 
 #include <algorithm>
@@ -22,9 +23,9 @@ public:
 private:
   void   flushImage();
   size_t width = 1280, height = 720, chunkSize = 8, bytesPerImage, currentByte;
-  std::string          wd = "out";
-  std::string          fileOutputPath;
-  std::vector<uint8_t> currentImageData;
-  size_t               currentImage;
-  CommandRunner        cmdRunner;
+  std::filesystem::path wd = "PygaMasher_wd";
+  std::filesystem::path fileOutputPath;
+  std::vector<uint8_t>  currentImageData;
+  size_t                currentImage;
+  CommandRunner         cmdRunner;
 };

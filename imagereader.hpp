@@ -1,6 +1,7 @@
 #pragma once
 
 #include "commandrunner.hpp"
+#include "ffmpeg.hpp"
 #include "stb/stb_image.h"
 
 #include <algorithm>
@@ -11,17 +12,17 @@
 class ImageReader {
 public:
   ImageReader();
-  void setInputFile(const std::string &path);
-  void setOutputFile(const std::string &path);
+  void setInputFile(const std::filesystem::path &path);
+  void setOutputFile(const std::filesystem::path &path);
   void start();
 
 private:
   std::ofstream outFile;
-  void          readImage(const std::string &path);
+  void          readImage(const std::filesystem::path &path);
 
-  std::string inputVideo = "out.mp4";
-  std::string cachePath  = "out";
-  std::string outputPath = "file";
+  std::filesystem::path inputVideo = "out.mp4";
+  std::filesystem::path cachePath  = "PygaMasher_wd";
+  std::filesystem::path outputPath = "file";
 
   size_t chunkSize = 8;
 };
