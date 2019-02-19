@@ -11,13 +11,24 @@ find_package(PkgConfig)
 
 pkg_check_modules(GTKMM gtkmm-3.0)
 
-add_executable(PygaMasher main.cpp mainwindow.cpp imagewriter.cpp imagereader.cpp commandrunner.cpp)
+# Add fec
+add_subdirectory(external/fec)
+
+add_executable(PygaMasher 
+	commandrunner.cpp
+	main.cpp
+	mainwindow.cpp
+	imagewriter.cpp
+	imagereader.cpp 
+	rsdecoder.cpp
+	rsencoder.cpp
+	)
 
 
-target_link_libraries(PygaMasher stdc++fs pthread)
+target_link_libraries(PygaMasher stdc++fs pthread fec)
 
 link_directories(${GTKMM_LIBRARY_DIRS})
 
-include_directories(${GTKMM_INCLUDE_DIRS})
+target_include_directories(PygaMasher PRIVATE ${GTKMM_INCLUDE_DIRS} external)
 
 target_link_libraries(PygaMasher ${GTKMM_LIBRARIES})

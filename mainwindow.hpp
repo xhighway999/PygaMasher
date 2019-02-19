@@ -1,4 +1,9 @@
 #pragma once
+#include "imagereader.hpp"
+#include "imagewriter.hpp"
+#include "rsdecoder.hpp"
+#include "rsencoder.hpp"
+
 #include <gtkmm/builder.h>
 #include <gtkmm/entry.h>
 #include <gtkmm/filechooserbutton.h>
@@ -6,10 +11,8 @@
 #include <gtkmm/label.h>
 #include <gtkmm/messagedialog.h>
 #include <gtkmm/radiobutton.h>
+#include <gtkmm/textview.h>
 #include <gtkmm/window.h>
-
-#include "imagewriter.hpp"
-#include "imagereader.hpp"
 
 class MainWindow : public Gtk::Window {
 public:

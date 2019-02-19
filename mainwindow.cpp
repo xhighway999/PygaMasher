@@ -38,10 +38,24 @@ void MainWindow::onStartClicked() {
   bool        mash     = mashRadio->get_active();
 
   auto mashFunc = [](std::string in, std::string out) {
+
+	
+
+    //RS encode the file
+    RsEncoder encoder;
+    encoder.setInputFile(in);
+    encoder.setOutputFile("rsencoded.rs");
+    encoder.start();
+    while(!encoder.done()) {
+    	sleep(1);
+	std::cout << encoder.getProgress() * 100.f << " % done" << std::endl;
+    }
+
+
     ImageWriter writer;
     writer.setOutputFile(out);
 
-    std::ifstream file(in, std::ifstream::binary);
+    std::ifstream file("rsencoded.rs", std::ifstream::binary);
     writer.start();
     char data[512];
     do {
@@ -52,10 +66,23 @@ void MainWindow::onStartClicked() {
     writer.end();
   };
   auto recoverFunc = [](std::string in, std::string out) {
+    
+
     ImageReader reader;
     reader.setInputFile(in);
-    reader.setOutputFile(out);
+    reader.setOutputFile("rsencoded.rs");
     reader.start();
+
+
+    RsDecoder decoder;
+    decoder.setInputFile("rsencoded.rs");
+    decoder.setOutputFile(out);
+    decoder.start();
+    while(!decoder.done()) {
+    	sleep(1);
+	std::cout << decoder.getProgress() * 100.f << " % done" << std::endl;
+    }
+    std::cout << "Decoder done. " << decoder.getTotalErrors() << " Errors" << std::endl;
   };
 
   if(mash)
