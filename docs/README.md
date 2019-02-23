@@ -22,5 +22,4 @@ build/PygaMasher
 
 ### TODO
 - Show progress to user
-- Implement error correction
 - Expose more settings to the user
